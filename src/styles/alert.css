@@ -1,0 +1,18 @@
+.alert {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 1em;
+  text-align: center;
+  background-color: white;
+  margin-bottom: 1em;
+}
+
+.alert-success {
+  border-color: green;
+  color: green;
+}
+
+.alert-error {
+  border-color: red;
+  color: red;
+}
