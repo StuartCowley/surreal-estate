@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import NavBar from "./NavBar";
 
@@ -7,11 +7,21 @@ import Properties from "./Properties";
 import AddProperty from "./AddProperty";
 
 const App = () => {
+  const [userID, setUserID] = useState("");
+
+  const handleLogin = (response) => {
+    setUserID(response.id);
+  };
+
+  const handleLogout = () => {
+    window.FB.logout();
+  };
+
   return (
     <>
-      <NavBar />
+      <NavBar onLogin={handleLogin} onLogout={handleLogout} userID={userID} />
       <Routes>
-        <Route path="/" element={<Properties />} />
+        <Route path="/" element={<Properties userID={userID} />} />
         <Route path="add-property" element={<AddProperty />} />
       </Routes>
     </>

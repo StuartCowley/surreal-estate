@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
 
 import PropertyCard from "./PropertyCard";
@@ -8,7 +9,7 @@ import Alert from "./Alert";
 import "../styles/properties.css";
 import SideBar from "./Sidebar";
 
-const Properties = () => {
+const Properties = ({ userID }) => {
   const [properties, setProperties] = useState([]);
   const [alert, setAlert] = useState({ message: "" });
   const { search } = useLocation();
@@ -36,6 +37,13 @@ const Properties = () => {
       .catch((err) => console.error(err));
   }, [search]);
 
+  const handleSaveProperty = (propertyId) => {
+    axios.post("http://localhost:4000/api/v1/Favourite", {
+      propertyListing: propertyId,
+      fbUserId: userID,
+    });
+  };
+
   return (
     <>
       <Alert message={alert.message} />
@@ -43,12 +51,20 @@ const Properties = () => {
       <div className="properties">
         {properties.map((property) => (
           <div key={property._id} className="item">
-            <PropertyCard {...property} />
+            <PropertyCard
+              {...property}
+              userID={userID}
+              onSaveProperty={handleSaveProperty}
+            />
           </div>
         ))}
       </div>
     </>
   );
+};
+
+Properties.propTypes = {
+  userID: PropTypes.string.isRequired,
 };
 
 export default Properties;
