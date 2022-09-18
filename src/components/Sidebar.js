@@ -1,30 +1,45 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import qs from "qs";
 
 import "../styles/sidebar.css";
 
-const buildQueryString = (operation, valueObj) => {
-  const { search } = useLocation();
-
-  const currentQueryParams = qs.parse(search, { ignoreQueryPrefix: true });
-
-  const newQueryParams = {
-    ...currentQueryParams,
-    [operation]: JSON.stringify(valueObj),
-  };
-
-  return qs.stringify(newQueryParams, { addQueryPrefix: true, encode: false });
-};
-
 const SideBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { search } = useLocation();
+  const navigate = useNavigate();
+
+  const buildQueryString = (operation, valueObj) => {
+    const currentQueryParams = qs.parse(search, { ignoreQueryPrefix: true });
+
+    const newQueryParams = {
+      ...currentQueryParams,
+      [operation]: JSON.stringify({
+        ...JSON.parse(currentQueryParams[operation] || "{}"),
+        ...valueObj,
+      }),
+    };
+
+    return qs.stringify(newQueryParams, {
+      addQueryPrefix: true,
+      encode: false,
+    });
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const newQueryString = buildQueryString("query", {
+      title: { $regex: searchTerm },
+    });
+
+    navigate(newQueryString);
+  };
 
   return (
     <aside className="sidebar">
       <section className="sidebar__search">
         <h3 className="sidebar__header">Search</h3>
-        <form>
+        <form onSubmit={handleSearch}>
           <input
             type="text"
             value={searchTerm}
