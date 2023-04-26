@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import FacebookLogin from "react-facebook-login";
+import FacebookLogin from "@greatsumini/react-facebook-login";
 import PropTypes from "prop-types";
 import logo from "../assets/logo.png";
 
@@ -27,10 +27,13 @@ const NavBar = ({ onLogin, onLogout, userID }) => {
       </ul>
       {userID === "" ? (
         <FacebookLogin
-          appId="your-developer-id-here"
-          autoLoad
-          fields="name,email,picture"
-          callback={onLogin}
+          appId="1127110308230331"
+          onSuccess={(response) => {
+            onLogin(response);
+          }}
+          onFail={(error) => {
+            console.log("Login Failed!", error);
+          }}
         />
       ) : (
         <button type="button" onClick={handleLogout}>

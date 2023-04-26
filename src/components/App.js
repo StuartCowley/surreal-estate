@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import { FacebookLoginClient } from "@greatsumini/react-facebook-login";
 import NavBar from "./NavBar";
 
 import "../styles/app.css";
@@ -10,11 +11,13 @@ const App = () => {
   const [userID, setUserID] = useState("");
 
   const handleLogin = (response) => {
-    setUserID(response.id);
+    setUserID(response.userID);
   };
 
   const handleLogout = () => {
-    window.FB.logout();
+    FacebookLoginClient.logout(() => {
+      setUserID("");
+    });
   };
 
   return (
